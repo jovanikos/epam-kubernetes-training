@@ -1,0 +1,54 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: resources-ms-deployment
+  namespace: dev
+  labels:
+    app: resources-ms
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: resources-ms
+  template:
+    metadata:
+      labels:
+        app: resources-ms
+    spec:
+      enableServiceLinks: false
+      initContainers:
+        - name: wait-for-resources-db
+          image: busybox:1.28
+          command: [ 'sh', '-c', 'until nslookup resources-db; do echo waiting for resources-db; sleep 2; done' ]
+        - name: wait-for-songs-ms
+          image: busybox:1.28
+          command: [ 'sh', '-c', 'until nslookup songs-ms; do echo waiting for songs-ms; sleep 2; done' ]
+      containers:
+        - name: resources-ms
+          image: resources-ms:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          env:
+            - name: RESOURCES_DB_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: music-service-config
+                  key: RESOURCES_DB_URL
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: resources-ms
+  namespace: dev
+  labels:
+    app: resources-ms
+spec:
+  type: NodePort
+  selector:
+    app: resources-ms
+  ports:
+    - port: 8080
+      targetPort: 8080
+      nodePort: 30002

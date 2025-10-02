@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: music-service-config
+  namespace: dev
+data:
+  RESOURCES_DB_URL: "resources-db"
+  SONGS_DB_URL: "songs-db"
+
