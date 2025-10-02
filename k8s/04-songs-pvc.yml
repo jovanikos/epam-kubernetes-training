@@ -5,7 +5,7 @@ metadata:
   namespace: dev
   labels:
     type: local
-    app: songs-service
+    app: songs-ms
 spec:
   storageClassName: manual
   capacity:
@@ -22,7 +22,7 @@ metadata:
   name: songs-pvc
   namespace: dev
   labels:
-    app: songs-service
+    app: songs-ms
 spec:
   storageClassName: manual
   accessModes:

@@ -30,16 +30,12 @@ spec:
     spec:
       containers:
         - name: songs-db
-          image: postgres:13
+          image: postgres:17
           ports:
             - containerPort: 5432
-          env:
-            - name: POSTGRES_DB
-              value: "postgres"
-            - name: POSTGRES_USER
-              value: "postgres"
-            - name: POSTGRES_PASSWORD
-              value: "postgres"
+          envFrom:
+            - secretRef:
+                name: songs-db-secret
           readinessProbe:
             exec:
               command:
@@ -70,8 +66,8 @@ metadata:
 spec:
   clusterIP: None
   ports:
-    - port: 5432
-      targetPort: 5432
+    - port: 5433
+      targetPort: 5433
   selector:
     app: resources-db
 ---
@@ -93,16 +89,15 @@ spec:
     spec:
       containers:
         - name: resources-db
-          image: postgres:13
+          image: postgres:17
           ports:
-            - containerPort: 5432
+            - containerPort: 5433
+          envFrom:
+            - secretRef:
+                name: resources-db-secret
           env:
-            - name: POSTGRES_DB
-              value: "postgres"
-            - name: POSTGRES_USER
-              value: "postgres"
-            - name: POSTGRES_PASSWORD
-              value: "postgres"
+            - name: PGPORT
+              value: "5433"
           readinessProbe:
             exec:
               command:
