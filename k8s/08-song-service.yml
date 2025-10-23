@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: songs-ms-deployment
+  name: songs-ms
   namespace: dev
   labels:
     app: songs-ms
@@ -29,10 +29,7 @@ spec:
             - containerPort: 8081
           env:
             - name: SONGS_DB_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: music-service-config
-                  key: SONGS_DB_URL
+              value: "songs-db"
           volumeMounts:
             - name: songs-storage
               mountPath: /app/data

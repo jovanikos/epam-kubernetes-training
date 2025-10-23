@@ -33,9 +33,15 @@ spec:
           image: postgres:17
           ports:
             - containerPort: 5432
-          envFrom:
-            - secretRef:
-                name: songs-db-secret
+          env:
+            - name: POSTGRES_DB
+              value: "postgres"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
+            - name: PGPORT
+              value: "5432"
           readinessProbe:
             exec:
               command:
@@ -92,10 +98,13 @@ spec:
           image: postgres:17
           ports:
             - containerPort: 5433
-          envFrom:
-            - secretRef:
-                name: resources-db-secret
           env:
+            - name: POSTGRES_DB
+              value: "postgres"
+            - name: POSTGRES_USER
+              value: "postgres"
+            - name: POSTGRES_PASSWORD
+              value: "postgres"
             - name: PGPORT
               value: "5433"
           readinessProbe:

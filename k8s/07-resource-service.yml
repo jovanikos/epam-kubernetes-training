@@ -2,7 +2,7 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: resources-ms-deployment
+  name: resources-ms
   namespace: dev
   labels:
     app: resources-ms
@@ -32,10 +32,7 @@ spec:
             - containerPort: 8080
           env:
             - name: RESOURCES_DB_URL
-              valueFrom:
-                configMapKeyRef:
-                  name: music-service-config
-                  key: RESOURCES_DB_URL
+              value: "resources-db"
 ---
 apiVersion: v1
 kind: Service
