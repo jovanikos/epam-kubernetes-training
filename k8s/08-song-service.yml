@@ -27,9 +27,20 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8081
+          envFrom:
+            - configMapRef:
+                name: songs-ms-config
           env:
-            - name: SONGS_DB_URL
-              value: "songs-db"
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: resources-db-secret
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: resources-db-secret
+                  key: POSTGRES_PASSWORD
           volumeMounts:
             - name: songs-storage
               mountPath: /app/data

@@ -30,9 +30,20 @@ spec:
           imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
+          envFrom:
+            - configMapRef:
+                name: resources-ms-config
           env:
-            - name: RESOURCES_DB_URL
-              value: "resources-db"
+            - name: SPRING_DATASOURCE_USERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: resources-db-secret
+                  key: POSTGRES_USER
+            - name: SPRING_DATASOURCE_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: resources-db-secret
+                  key: POSTGRES_PASSWORD
 ---
 apiVersion: v1
 kind: Service

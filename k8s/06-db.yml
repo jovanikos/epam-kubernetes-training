@@ -36,12 +36,14 @@ spec:
           env:
             - name: POSTGRES_DB
               value: "postgres"
-            - name: POSTGRES_USER
-              value: "postgres"
-            - name: POSTGRES_PASSWORD
-              value: "postgres"
             - name: PGPORT
-              value: "5432"
+              valueFrom:
+                configMapKeyRef:
+                  name: songs-ms-config
+                  key: SONGS_DB_PORT
+          envFrom:
+            - secretRef:
+                name: songs-db-secret
           readinessProbe:
             exec:
               command:
@@ -54,6 +56,15 @@ spec:
           volumeMounts:
             - name: songs-db-storage
               mountPath: /var/lib/postgresql/data
+            - name: init-scripts
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: init-scripts
+          configMap:
+            name: songs-ms-config
+            items:
+              - key: songs-init.sql
+                path: 01-songs-init.sql
   volumeClaimTemplates:
     - metadata:
         name: songs-db-storage
@@ -101,12 +112,14 @@ spec:
           env:
             - name: POSTGRES_DB
               value: "postgres"
-            - name: POSTGRES_USER
-              value: "postgres"
-            - name: POSTGRES_PASSWORD
-              value: "postgres"
             - name: PGPORT
-              value: "5433"
+              valueFrom:
+                configMapKeyRef:
+                  name: resources-ms-config
+                  key: RESOURCES_DB_PORT
+          envFrom:
+            - secretRef:
+                name: resources-db-secret
           readinessProbe:
             exec:
               command:
@@ -119,6 +132,15 @@ spec:
           volumeMounts:
             - name: resources-db-storage
               mountPath: /var/lib/postgresql/data
+            - name: init-scripts
+              mountPath: /docker-entrypoint-initdb.d
+      volumes:
+        - name: init-scripts
+          configMap:
+            name: resources-ms-config
+            items:
+              - key: resources-init.sql
+                path: 01-resources-init.sql
   volumeClaimTemplates:
     - metadata:
         name: resources-db-storage

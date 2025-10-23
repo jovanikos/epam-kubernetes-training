@@ -87,3 +87,7 @@ psql -U postgres -d postgres
 SELECT * FROM songs;
 ```
 ![img_8.png](resources/img_8.png)
+
+
+\d resources
+\d songs
